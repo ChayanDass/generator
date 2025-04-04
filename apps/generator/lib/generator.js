@@ -134,7 +134,7 @@ class Generator {
       Object.defineProperty(this.templateParams, key, {
         enumerable: true,
         get() {
-          if (!self.templateConfig.parameters || !self.templateConfig.parameters[key]) {
+          if (!self.templateConfig.parameters?.[key]) {
             throw new Error(`Template parameter "${key}" has not been defined in the package.json file under generator property. Please make sure it's listed there before you use it in your template.`);
           }
           return templateParams[key];
@@ -436,7 +436,7 @@ class Generator {
    * @param  {String} asyncapiString AsyncAPI string to use as source.
    * @param  {Object} [parseOptions={}] AsyncAPI Parser parse options. Check out {@link https://www.github.com/asyncapi/parser-js|@asyncapi/parser} for more information.
    * @deprecated Use the `generate` function instead. Just change the function name and it works out of the box.
-   * @return {Promise}
+   * @return {Promise<TemplateRenderResult|undefined>}
    */
   async generateFromString(asyncapiString, parseOptions = {}) {
     const isParsableCompatible = asyncapiString && typeof asyncapiString === 'string';
@@ -466,7 +466,7 @@ class Generator {
    * }
    *
    * @param  {String} asyncapiURL Link to AsyncAPI file
-   * @return {Promise}
+   * @return {Promise<TemplateRenderResult|undefined>}
    */
   async generateFromURL(asyncapiURL) {
     const doc = await fetchSpec(asyncapiURL);
@@ -493,7 +493,7 @@ class Generator {
    * }
    *
    * @param  {String} asyncapiFile AsyncAPI file to use as source.
-   * @return {Promise}
+   * @return {Promise<TemplateRenderResult|undefined>}
    */
   async generateFromFile(asyncapiFile) {
     const doc = await readFile(asyncapiFile, { encoding: 'utf8' });
@@ -562,8 +562,8 @@ class Generator {
 
       try {
         installedPkg = getTemplateDetails(this.templateName, PACKAGE_JSON_FILENAME);
-        pkgPath = installedPkg && installedPkg.pkgPath;
-        packageVersion = installedPkg && installedPkg.version;
+        pkgPath = installedPkg?.pkgPath;
+        packageVersion = installedPkg?.version;
         log.debug(logMessage.templateSource(pkgPath));
         if (packageVersion) log.debug(logMessage.templateVersion(packageVersion));
 
@@ -759,7 +759,7 @@ class Generator {
     // Check if the filename dictates it should be separated
     let wasSeparated = false;
     for (const prop in fileNamesForSeparation) {
-      if (Object.prototype.hasOwnProperty.call(fileNamesForSeparation, prop) && stats.name.includes(`$$${prop}$$`)) {
+      if (Object.hasOwn(fileNamesForSeparation, prop) && stats.name.includes(`$$${prop}$$`)) {
         await this.generateSeparateFiles(asyncapiDocument, fileNamesForSeparation[prop], prop, stats.name, root);
         const templateFilePath = path.relative(this.templateContentDir, path.resolve(root, stats.name));
         fs.unlink(path.resolve(this.targetDir, templateFilePath), next);
@@ -875,7 +875,7 @@ class Generator {
     const shouldOverwriteFile = await this.shouldOverwriteFile(relativeTargetFile);
     if (!shouldOverwriteFile) return;
 
-    if (this.templateConfig.conditionalFiles && this.templateConfig.conditionalFiles[relativeSourceFile]) {
+    if (this.templateConfig.conditionalFiles?.[relativeSourceFile]) {
       const server = this.templateParams.server && asyncapiDocument.servers().get(this.templateParams.server);
       const source = jmespath.search({
         ...asyncapiDocument.json(),

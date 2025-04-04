@@ -1,15 +1,19 @@
 [![AsyncAPI Generator](./assets/readme-banner.png)](https://www.asyncapi.com/tools/generator)
 
+> Some parts of the AsyncAPI Generator are deprecated and the plan is to remove them in October 2025. For more details read notes from release [@asyncapi/generator@2.6.0](https://github.com/asyncapi/generator/releases/tag/%40asyncapi%2Fgenerator%402.6.0).
+
 This is a Monorepo managed using [Turborepo](https://turbo.build/) and contains the following package:
 
 1. [Generator](apps/generator): This is a tool that you can use to generate whatever you want basing on the AsyncAPI specification file as an input.
 
-2. [Nunjucks-filters](apps/nunjucks-filters): This library contains generator filters that can be reused across multiple templates, helping to avoid redundant work. These filters are designed specifically for Nunjucks templates and are included by default with the generator, so there's no need to add them to  dependencies seprately.
+1. [Hooks](apps/hooks): This library contains generator filters that can be reused across multiple templates, helping to avoid redundant work. Hooks are designed to let template developers hook into the template generation process. For example, one can create a hook code that will be automatically invoked right after the template generation process has ended.
 
+1. [Nunjucks-filters](apps/nunjucks-filters): This library contains generator filters that can be reused across multiple templates helping to avoid redundant work. These filters are designed specifically for Nunjucks templates and are included by default with the generator, so there's no need to add them to dependencies separately.
+
+> [!IMPORTANT]
+> **Deprecation Notice:** The Nunjucks renderer engine is deprecated and will be removed in future releases. We strongly recommend using the React renderer engine instead. You can find how to migrate from Nunjucks to React in the [migration guide](apps/generator/docs/nunjucks-depreciate.md)
 
 ![npm](https://img.shields.io/npm/v/@asyncapi/generator?style=for-the-badge) ![npm](https://img.shields.io/npm/dt/@asyncapi/generator?style=for-the-badge)
-
-> warning: This package doesn't support AsyncAPI 1.x anymore. We recommend to upgrade to the latest AsyncAPI version using the [AsyncAPI converter](https://github.com/asyncapi/converter-js) (You can refer to [installation guide](/apps/generator//docs//installation-guide.md)). If you need to convert documents on the fly, you may use the [Node.js](https://github.com/asyncapi/converter-js) or [Go](https://github.com/asyncapi/converter-go) converters.
 
 <!-- toc is generated with GitHub Actions do not remove toc markers -->
 
@@ -17,6 +21,8 @@ This is a Monorepo managed using [Turborepo](https://turbo.build/) and contains 
 
 - [Overview](#overview)
 - [List of official generator templates](#list-of-official-generator-templates)
+- [Filters](#filters)
+- [Hooks](#hooks)
 - [Contributing](#contributing)
 - [Contributors ✨](#contributors-%E2%9C%A8)
 
@@ -53,18 +59,24 @@ There is a large number of templates that are ready to use and are officially su
 
 You can find above templates and the ones provided by the community in **[this list](https://github.com/search?q=topic%3Aasyncapi+topic%3Agenerator+topic%3Atemplate)**
 
-# Generator Filters
+## Filters
 
-This library contains generator filters that can be reused across multiple templates, helping to avoid redundant work. These filters are designed specifically for Nunjucks templates and are included by default with the generator, so there's no need to add them to  dependencies seprately.
+ `apps/nunjucks-filters` library contains generator filters that can be reused across multiple templates, helping to avoid redundant work. These filters are designed specifically for Nunjucks templates and are included by default with the generator, so there's no need to add them to dependencies separately.
 
 This library consists of:
 
 - Custom filters. Check out [API docs](apps/nunjucks-filters/docs/api.md) for complete list
 - Lodash-powered filters. For the list of all available filters check [official docs](https://lodash.com/docs/)
 
+## Hooks
+
+The `apps/hooks` library contains generator filters that can be reused across multiple templates, helping to avoid redundant work. [Hooks](https://www.asyncapi.com/docs/tools/generator/hooks) are functions called by the generator at specific moments in the generation process. Hooks can be anonymous functions, but you can also assign them function names. These hooks can have arguments provided to them, or they may be expected to return a value.
+
+These hooks are included in the generator without adding any specific dependency to the library. You still have to enable the given hook in the configuration explicitly because some hooks can execute automatically without passing a specific parameter. [Learn more about configuration and what hooks are available out of the box](https://www.asyncapi.com/docs/tools/generator/hooks#official-library).
+
 ## Contributing
 
-For developement setup you can follow the detailed guide in [Developement guide](Development.md)
+For the development setup, you can follow the detailed guide in [Developement guide](Development.md)
 
 Read [CONTRIBUTING](CONTRIBUTING.md) guide.
 
@@ -100,11 +112,12 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <tr>
       <td align="center" valign="top" width="33.33%"><a href="https://github.com/swastiksuvam55"><img src="https://avatars.githubusercontent.com/u/90003260?v=4?s=100" width="100px;" alt="swastik suvam singh"/><br /><sub><b>swastik suvam singh</b></sub></a><br /><a href="https://github.com/asyncapi/generator/commits?author=swastiksuvam55" title="Code">💻</a></td>
       <td align="center" valign="top" width="33.33%"><a href="https://blog.orzzh.icu/"><img src="https://avatars.githubusercontent.com/u/33168669?v=4?s=100" width="100px;" alt="GavinZhengOI"/><br /><sub><b>GavinZhengOI</b></sub></a><br /><a href="https://github.com/asyncapi/generator/commits?author=GavinZhengOI" title="Documentation">📖</a></td>
-      <td align="center" valign="top" width="33.33%"><a href="https://github.com/lmgyuan"><img src="https://avatars.githubusercontent.com/u/16447041?v=4?s=100" width="100px;" alt="lmgyuan"/><br /><sub><b>lmgyuan</b></sub></a><br /><a href="https://github.com/asyncapi/generator/commits?author=lmgyuan" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="33.33%"><a href="https://github.com/lmgyuan"><img src="https://avatars.githubusercontent.com/u/16447041?v=4?s=100" width="100px;" alt="lmgyuan"/><br /><sub><b>lmgyuan</b></sub></a><br /><a href="https://github.com/asyncapi/generator/commits?author=lmgyuan" title="Documentation">📖</a> <a href="https://github.com/asyncapi/generator/issues?q=author%3Almgyuan" title="Bug reports">🐛</a> <a href="https://github.com/asyncapi/generator/commits?author=lmgyuan" title="Code">💻</a> <a href="#ideas-lmgyuan" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/asyncapi/generator/pulls?q=is%3Apr+reviewed-by%3Almgyuan" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/asyncapi/generator/commits?author=lmgyuan" title="Tests">⚠️</a></td>
     </tr>
     <tr>
       <td align="center" valign="top" width="33.33%"><a href="https://github.com/pierrick-boule"><img src="https://avatars.githubusercontent.com/u/3237116?v=4?s=100" width="100px;" alt="pierrick-boule"/><br /><sub><b>pierrick-boule</b></sub></a><br /><a href="https://github.com/asyncapi/generator/commits?author=pierrick-boule" title="Code">💻</a> <a href="https://github.com/asyncapi/generator/commits?author=pierrick-boule" title="Tests">⚠️</a> <a href="https://github.com/asyncapi/generator/commits?author=pierrick-boule" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="33.33%"><a href="https://dhaiyra-majmudar.netlify.app/"><img src="https://avatars.githubusercontent.com/u/124715224?v=4?s=100" width="100px;" alt="Dhairya Majmudar"/><br /><sub><b>Dhairya Majmudar</b></sub></a><br /><a href="https://github.com/asyncapi/generator/issues?q=author%3ADhairyaMajmudar" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="33.33%"><a href="https://github.com/Gmin2"><img src="https://avatars.githubusercontent.com/u/127925465?v=4?s=100" width="100px;" alt="Mintu Gogoi"/><br /><sub><b>Mintu Gogoi</b></sub></a><br /><a href="https://github.com/asyncapi/generator/issues?q=author%3AGmin2" title="Bug reports">🐛</a> <a href="https://github.com/asyncapi/generator/commits?author=Gmin2" title="Code">💻</a> <a href="#ideas-Gmin2" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/asyncapi/generator/commits?author=Gmin2" title="Documentation">📖</a> <a href="https://github.com/asyncapi/generator/pulls?q=is%3Apr+reviewed-by%3AGmin2" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/asyncapi/generator/commits?author=Gmin2" title="Tests">⚠️</a></td>
     </tr>
   </tbody>
 </table>

@@ -10,11 +10,11 @@ const dummySpecPath = path.resolve(__dirname, './docs/dummy.yml');
 const refSpecPath = path.resolve(__dirname, './docs/apiwithref.json');
 const refSpecFolder = path.resolve(__dirname, './docs/');
 const crypto = require('crypto');
-const mainTestResultPath = 'test/temp/integrationTestResult';
-const reactTemplate = 'test/test-templates/react-template';
-const nunjucksTemplate = 'test/test-templates/nunjucks-template';
+const mainTestResultPath = path.resolve(__dirname, './temp/integrationTestResult');
+const reactTemplate = path.resolve(__dirname, './test-templates/react-template');
+const nunjucksTemplate = path.resolve(__dirname, './test-templates/nunjucks-template');
 //temp location where react template is copied for each test that does some mutation on template files
-const copyOfReactTemplate = 'test/temp/reactTemplate';
+const copyOfReactTemplate = path.resolve(__dirname, './temp/reactTemplate');
 
 describe('Integration testing generateFromFile() to make sure the result of the generation is not changend comparing to snapshot', () => {
   const generateFolderName = () => {
@@ -62,8 +62,11 @@ describe('Integration testing generateFromFile() to make sure the result of the 
       templateParams: { version: 'v1', mode: 'production' }
     });
     await generator.generateFromFile(dummySpecPath);
-    const file = await readFile(path.join(outputDir, testOutputFile), 'utf8');
-    expect(file).toMatchSnapshot();
+    const mdFile = await readFile(path.join(outputDir, testOutputFile), 'utf8');
+    //react template has hooks lib enabled and generation of asyncapi document that was passed as input should work out of the box without adding @asyncapi/generator-hooks to dependencies
+    const asyncAPIFile = await readFile(path.join(outputDir, 'asyncapi.yaml'), 'utf8');
+    expect(mdFile).toMatchSnapshot();
+    expect(asyncAPIFile).toMatchSnapshot();
   });
 
   it('generate json based api with referenced JSON Schema', async () => {

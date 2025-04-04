@@ -1,5 +1,23 @@
 # @asyncapi/generator
 
+## 2.6.0
+
+### Minor Changes
+
+- fd5dfd7: - **Deprecation of `ag` CLI**: The `ag` CLI is deprecated in favour of the `AsyncAPI CLI` that is a single entry point for all the AsyncAPI tools. No new features will be added to `ag` and it will be completely removed. The official documentation of AsyncAPI Generator has not mentioned `ag` for over a year, instead only using `AsyncAPI CLI` and `asyncapi generate fromTemplate` commands. Refer to the [migration guide](https://www.asyncapi.com/docs/tools/generator/migration-cli) that will help you understand how to migrate your `ag` commands to the new `AsyncAPI CLI` command.
+
+  - **Deprecation of Nunjucks render engine:** The [Nunjucks render engine](https://www.asyncapi.com/docs/tools/generator/nunjucks-render-engine) is deprecated and will be removed in October 2025. It is recommended to switch to the [React render engine](https://www.asyncapi.com/docs/tools/generator/react-render-engine) instead. If you are using Nunjucks in production, read the [migration guide](https://www.asyncapi.com/docs/tools/generator/migration-nunjucks-react) that will help you understand how to migrate to the new engine. The removal of the Nunjucks render engine results also in removal of [Nunjucks-filters](apps/nunjucks-filters) library.
+
+  Removal of both deprecated parts of the generator is planned for October 2025, which gives you 9 months to migrate.
+
+## 2.5.0
+
+### Minor Changes
+
+- 2d16234: - Package `@asyncapi/generator-hooks` is now part of `generator` repo and won't be released separately. Theource code is stored under `apps/hooks` but the `package/library` name stays as it was originally for backward compatibility,
+  - By default, the `@asyncapi/generator-hooks` package, known as **package** contains many different hooks used in templates and is available in the generator. You no longer have to configure it in your `package.json` in `dependencies`. The package, `@asyncapi/generator-hooks` will no longer be published to NPM separately and is deprecated. You can still have your own hooks, store them in a separate package, and configure them with your template.
+  - Remember that the fact that the hooks package is now included by default, doesn't mean all hooks from it are enabled by default. You still have to enable a given hook in the configuration file explicitly because some hooks can execute automatically without passing a specific parameter. Also, a hook's supported parameters need to be defined in your template's config.
+
 ## 2.4.1
 
 ### Patch Changes

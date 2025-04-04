@@ -1,6 +1,6 @@
 
 **/node_modules/
-
+.DS_Store
 # Local env files
 .env
 .env.local
@@ -15,3 +15,5 @@ coverage
 .turbo
 
 /.idea
+temp
+__pycache__
